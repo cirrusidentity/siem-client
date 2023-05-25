@@ -65,6 +65,9 @@ if args.orgurl:
 if args.apiurl:
     _endpoint_url = args.apiurl
 
+if args.limit and args.limit > 1000:
+    args.limit = 1000
+
 if args.c:
     if os.path.exists(_temp_file_name):
         # If the temporary file exists, read the pagination URL from it
