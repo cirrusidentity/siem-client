@@ -73,7 +73,6 @@ if args.c:
         # If the temporary file exists, read the pagination URL from it
         with open(_temp_file_name, "r") as f:
             _pagination_url = f.read().strip()
-            f.close()
             
 _data = {}
 
@@ -92,13 +91,9 @@ while True:
         if _param in _args_dict and not re.search(f"&{_param}",_endpoint_url) and _args_dict[_param]:
             _endpoint_url = f"{_endpoint_url}{_param}={_args_dict[_param]}&"
 
-    # if not re.search("&limit=",_endpoint_url) and args.limit > 0:
-    #     _endpoint_url = f"{_endpoint_url}limit={args.limit}&"
-    # if args.since is not None and not re.search("since=",_endpoint_url) and not re.search("after=",_endpoint_url):
-    #     _endpoint_url = f"{_endpoint_url}since={args.since}&"
-    _endpoint_url = re.sub(r"[&?]$","",_endpoint_url)
+    _endpoint_url = _endpoint_url.rstrip('&?')
     _debug(f"Sending request to {_endpoint_url}")
-    _resp = requests.post(_endpoint_url,  auth=_credentials, data=json.dumps(_data))
+    _resp = requests.post(_endpoint_url, auth=_credentials, json=_data)
     if _resp.status_code == 200:
         _results = _resp.json()
         print(json.dumps(_results, indent=4))
@@ -107,7 +102,6 @@ while True:
             _pagination_url = _resp.headers["link"]
             with open(_temp_file_name, "w") as f:
                 f.write(_pagination_url)
-                f.close()
             if len(_results) < args.limit:
                 # We're at the end of the results
                 _debug(f"Reached end of results. Limit: {args.limit}. Results: {len(_results)}")
