@@ -10,7 +10,8 @@ from requests.auth import HTTPBasicAuth
 
 _temp_file_name = '/tmp/example-client.run'
 
-_endpoint_url = 'https://apigw.cirrusidentity.com/logs/v1'
+# This is a BETA URL and _Will Change_
+_endpoint_url = 'https://5clcj0iz8c.execute-api.us-east-1.amazonaws.com/prod/logs'
 _pagination_url = ''
 
 _allowed_params = [
